@@ -7,6 +7,8 @@ import {CartContext} from "@/components/CartContext";
 import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
+import { useSession } from "next-auth/react";
+import LoginForm from "@/components/LoginForm";
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -67,6 +69,10 @@ const CityHolder = styled.div`
 `;
 
 export default function CartPage() {
+  const { data: session } = useSession();
+  if (!session) {
+    return <LoginForm />;
+  }
   const {cartProducts,addProduct,removeProduct,clearCart} = useContext(CartContext);
   const [products,setProducts] = useState([]);
   const [name,setName] = useState('');
