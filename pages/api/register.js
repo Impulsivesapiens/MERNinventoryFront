@@ -11,6 +11,12 @@ async function handler(req, res) {
     const { name, email, password } = await req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     await connectMongoDB();
+    const user = await People.findOne({ email });
+    if (user) {
+      return res
+        .status(405)
+        .json({ message: "User already exists." }, { status: 400 });
+    }
     await People.create({ name, email, password: hashedPassword });
 
     return res
