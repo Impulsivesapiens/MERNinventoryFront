@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { set } from "mongoose";
 
 export default function RegisterForm() {
   const { data: session } = useSession();
@@ -11,7 +12,7 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  
+
   const router = useRouter();
   if (session) {
     router.push("/");
@@ -43,9 +44,11 @@ export default function RegisterForm() {
         form.reset();
         router.push("/");
       } else {
+        setError("User already exists.");
         console.log("User registration failed.");
       }
     } catch (error) {
+      setError("User already exists.");
       console.log("Error during registration: ", error);
     }
   };
